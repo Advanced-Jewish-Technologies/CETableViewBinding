@@ -26,6 +26,11 @@
                   selectionCommand:(RACCommand *)selection
                       templateCell:(UINib *)templateCellNib NS_DESIGNATED_INITIALIZER;
 
+- (instancetype)initWithTableView:(UITableView *)tableView
+                     sourceSignal:(RACSignal *)source
+                 selectionCommand:(RACCommand *)selection
+                  reuseIdentifier:(NSString *)identifier NS_DESIGNATED_INITIALIZER;
+
 + (instancetype) bindingHelperForTableView:(UITableView *)tableView
                               sourceSignal:(RACSignal *)source
                           selectionCommand:(RACCommand *)selection
@@ -36,6 +41,13 @@
                           selectionCommand:(RACCommand *)selection
                          templateCellClass:(Class)templateCellClass
                            reuseIdentifier:(NSString *)identifier;
+
++ (instancetype) bindingHelperForTableView:(UITableView *)tableView
+                              sourceSignal:(RACSignal *)source
+                          selectionCommand:(RACCommand *)selection
+                           reuseIdentifier:(NSString *)identifier;
+
++ (instancetype)init NS_UNAVAILABLE;
 
 
 @end

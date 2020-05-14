@@ -8,7 +8,6 @@
 
 #import "CETableViewBindingHelper.h"
 #import "CEReactiveView.h"
-#import <ReactiveObjC/RACEXTScope.h>
 #import "CEObservableMutableArray.h"
 
 @interface CETableViewBindingHelper () <UITableViewDataSource, UITableViewDelegate, CEObservableMutableArrayDelegate>
@@ -175,6 +174,39 @@ uint scrollViewDidEndScrollingAnimation:1;
   return self;
 }
 
+- (instancetype)initWithTableView:(UITableView *)tableView
+                     sourceSignal:(RACSignal *)source
+                 selectionCommand:(RACCommand *)selection
+                  reuseIdentifier:(NSString *)identifier {
+    
+    if (self = [super init]) {
+        _tableView = tableView;
+        _data = @[];
+        _selection = selection;
+        
+        // each time the view model updates the array property, store the latest
+        // value and reload the table view
+        [source subscribeNext:^(id x) {
+            if ([x isKindOfClass:[CEObservableMutableArray class]]) {
+                ((CEObservableMutableArray *)x).delegate = self;
+            }
+            if (self->_data != nil && [self->_data isKindOfClass:[CEObservableMutableArray class]]) {
+                ((CEObservableMutableArray *)self->_data).delegate = nil;
+            }
+            self->_data = x;
+            [self->_tableView reloadData];
+        }];
+        
+        // save reuseIdentifier
+        self.reuseIdentifier = identifier;
+        
+        _tableView.dataSource = self;
+        _tableView.delegate = self;
+        self.delegate = nil;
+    }
+    return self;
+}
+
 + (instancetype)bindingHelperForTableView:(UITableView *)tableView
                              sourceSignal:(RACSignal *)source
                          selectionCommand:(RACCommand *)selection
@@ -194,6 +226,17 @@ uint scrollViewDidEndScrollingAnimation:1;
                                                   sourceSignal:source
                                               selectionCommand:selection
                                              templateCellClass:templateCellClass
+                                               reuseIdentifier:identifier];
+}
+
++ (instancetype) bindingHelperForTableView:(UITableView *)tableView
+                              sourceSignal:(RACSignal *)source
+                          selectionCommand:(RACCommand *)selection
+                           reuseIdentifier:(NSString *)identifier {
+    
+    return [[CETableViewBindingHelper alloc] initWithTableView:tableView
+                                                  sourceSignal:source
+                                              selectionCommand:selection
                                                reuseIdentifier:identifier];
 }
 
