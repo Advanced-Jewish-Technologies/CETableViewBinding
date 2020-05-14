@@ -1,7 +1,7 @@
 Pod::Spec.new do |spec|
 
   spec.name         = 'CETableViewBindingHelper'
-  spec.version      = '1'
+  spec.version      = '1.0.0'
   spec.license      = {
     :type => 'MIT',
     :file => 'MIT-LICENSE.txt'
