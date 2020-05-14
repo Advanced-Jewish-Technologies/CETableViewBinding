@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
 
-  spec.name         = 'ReactiveTableViewBinding'
+  spec.name         = 'CETableViewBindingHelper'
   spec.version      = '1'
   spec.license      = {
     :type => 'MIT',
